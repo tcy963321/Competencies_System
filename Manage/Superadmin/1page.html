@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<title>W3.CSS Template</title>
+<div class="wrapper text-center">
+  <h1 class="mb-3">Localstorage Example</h1>
+  <textarea id="text-field" rows="4" cols="50"></textarea>
+  <div class="mt-3">
+<a href="Welcomesuperadmin.php" class="w3-bar-item w3-button">Dashboard</a>
+    <button id="submit" class="btn-primary">Submit</button>
+    <button id="clear" class="btn-danger">Clear All</button>
+  </div> 
+</div>
+<script>const textValue = document.querySelector('#text-field');
+const submit = document.querySelector('#submit');
+const clear = document.querySelector('#clear');
+
+function saveText() {
+  sessionStorage.setItem('Text',textValue.value);
+}
+
+function clearText() {
+  textValue.value = '';
+  sessionStorage.clear();
+}
+
+// Check for session storage support
+if (window.sessionStorage) {
+  try {
+    // save text to local storage onkeyup 
+    textValue.addEventListener('keyup',saveText);
+  } catch (e) {
+    // Alert user for errors
+    if (e == QUOTA_EXCEEDED_ERR) {
+      alert('Storage limit exceeded');
+    }
+  }
+  if (sessionStorage.getItem('Text')) {
+    textValue.value = sessionStorage.getItem('Text');
+  }
+} else {
+  // No session storage support
+  console.log('No session storage support');
+}
+
+// clear textfield and storage if the
+// submit or clear all button is clicked
+clear.addEventListener('click', clearText);
+submit.addEventListener('click', clearText);</script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Local Storage</title>
+  <script type="text/javascript" src="main.js"></script>
+</head>
+<body>
+  <div id="formDiv">
+        <form id="carForm">
+            <h1>Local Storage</h1>
+            <label for="carBrand" >Car</label>
+            <input type="text" id="carBrand" placeholder="Car brand" required autofocus><br>
+            <label for="carPrice" >Price</label>
+            <input type="text" id="carPrice" placeholder="Price" required><br>
+            <label for="key" >Key</label>
+            <input type="text" id="key" placeholder="Key" required><br>
+            <button type="submit">Store Records</button>
+        </form>
+        <br>
+        <label for="retrieveKey" >Enter Key to retrieve item</label>
+        <input type="text" id="retrieveKey" placeholder="retrieveKey" required><br>
+        <button id="retrieveButton">Retrieve records</button>
+        <br>
+        <div id="retrieve"></div>
+        <br>
+        <label for="removeKey" >Enter Key to delete item</label>
+        <input type="text" id="removeKey" placeholder="removeKey" required><br>
+        <button id="removeButton">Remove record</button>
+        <br>
+        <button id="clearButton">Clear all records</button>
+  </div>
+  <script>
+  function store(){ //stores items in the localStorage
+    var brand = document.getElementById('carBrand').value;
+    var price = document.getElementById('carPrice').value;
+    var key = document.getElementById('key').value;
+
+    const car = {
+        brand: brand,
+        price: price,
+    }
+
+    window.localStorage.setItem(key,JSON.stringify(car));  
+    //converting object to string
+}
+
+function retrieveRecords(){ //retrieves items in the localStorage
+    var key = document.getElementById('retrieveKey').value; //gets key from user
+    console.log("retrive records");
+    var records = window.localStorage.getItem(key); //searches for the key in localStorage
+    var paragraph = document.createElement("p");
+    var infor = document.createTextNode(records);
+    paragraph.appendChild(infor);
+    var element = document.getElementById("retrieve");
+    element.appendChild(paragraph);
+}
+
+function removeItem(){ //deletes item from localStorage
+    var key = document.getElementById('removeKey').value; //gets key from user
+    localStorage.removeItem(key) //passes key to the removeItem method
+    console.log("remove items");
+}
+
+function clearStorage(){ //clears the entire localStorage
+    localStorage.clear()
+    console.log("clear records");
+}
+
+window.onload =function(){ //ensures the page is loaded before functions are executed.
+    document.getElementById("carForm").onsubmit = store
+    document.getElementById("clearButton").onclick = clearStorage
+    document.getElementById("removeButton").onclick = removeItem
+    document.getElementById("retrieveButton").onclick = retrieveRecords
+}
+  </script>
+</body>
+</html>
