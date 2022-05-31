@@ -1,7 +1,7 @@
 <?php require_once ("processcompetency.php");
 				  if (!isset($_SESSION['username'])) {
   	$_SESSION['msg'] = "You must log in first";
-  	header('location: Adminlogin.php');
+	  header('location: ../Adminlogin.php');
   }			
 ?>
  <?php
@@ -21,19 +21,25 @@
   onclick="w3_close()">Close &times;</button>
   <a href="Welcomesuperadmin.php" class="w3-bar-item w3-button">Dashboard</a>
   <a href="SuperCreateCompetency.php" class="w3-bar-item w3-button">Competency</a>
-  <div class="dropdown">
-   <button class="w3-bar-item w3-button">Question List</button>
+<a href="Assessmentlist.php" class="w3-bar-item w3-button">Assessment List</a>
+	<a href="SelfAssessment.php" class="w3-bar-item w3-button">Self-Assessment</a>	
+	<a href="Evaluate.php" class="w3-bar-item w3-button">Evaluate</a>	
+  <a href="AssignASS.php" class="w3-bar-item w3-button">Assign Assessment</a>
+	<a href="CheckAssTest.php" class="w3-bar-item w3-button">Assign User Test List</a>
+	<a href="CheckEvaTest.php" class="w3-bar-item w3-button">Assign Evaluator Test List</a>
+	<div class="dropdown">
+   <button class="w3-bar-item w3-button">Remove List</button>
    <div class="dropdown-content">
-    <a href="Assessmentlist.php">Assessment</a>
-    <a href="Evaluatelist.php">Evaluate</a>
+    <a href="RemoveAssessment.php">Assessment</a>
+    <a href="RemoveEvaluate.php">Evaluate</a>
 	</div>
 	</div>
 	<br>
-   <div class="dropdown">
-   <button class="w3-bar-item w3-button">Leadership Competency Test</button>
+	<div class="dropdown">
+   <button class="w3-bar-item w3-button">History</button>
    <div class="dropdown-content">
-    <a href="">Assessment</a>
-    <a href="">Evaluate</a>
+    <a href="HistoryAssessment.php">Assessment</a>
+    <a href="HistoryEvaluate.php">Evaluate</a>
 	</div>
 	</div>
 </div>
@@ -60,7 +66,7 @@ Competencies</div>
 			
 			    <tr>
 				<td>Competency :</td>
-				<td><input type="text" name="competency" value="<?php echo $row['Competency'];?>" size="30" /></td>
+				<td><input type="text" name="competency" value="<?php echo $row['Competency'];?>" size="30" required /></td>
 			    </tr>
 				
 				<tr>
@@ -74,13 +80,15 @@ Competencies</div>
 				<tr><td></td>
 				<td><input type="radio" name="group" value="Organization Competencies"  <?php echo $OC;?> /> Organization Competencies</td>
 				</tr>
-				<tr><td></td>
-				<td><input type="radio" name="group" value="Other" <?php echo $OtherGroup;?> /><input "type="text" name="othergroup" id="otherField" value="<?php echo $Other;?>" placeholder="Other"/></td>
-				</tr>
 			 
 				<tr>
 				<td>Code Competency :</td>
-				<td><input type="text" name="code_competency" value="<?php echo $row['CodeCompetency'];?>"/></td>
+				<td><input type="text" name="code_competency" value="<?php echo $row['CodeCompetency'];?>" required /></td>
+				</tr>
+				
+				<tr>
+				<td>Weight Competency :</td>
+				<td><input type="number" name="Weight_competency" value="<?php echo $row['Weightcompetency'];?>" placeholder="Weight Competency" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" min="1" max="100" required /></td>
 				</tr>
 				
 				<tr>

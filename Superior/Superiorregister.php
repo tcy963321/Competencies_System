@@ -130,29 +130,63 @@ input {
   	<?php include('errors.php'); ?>
   	<div class="input-group">
   	  <label>EmployeeID</label>
-  	  <input type="text" name="username" value="<?php echo $username; ?>">
-  	</div>
-  	<div class="input-group">
-  	  <label>Password</label>
-  	  <input type="password" name="password_1">
-  	</div>
-  	<div class="input-group">
-  	  <label>Confirm password</label>
-  	  <input type="password" name="password_2">
+  	  <input type="text" name="username" required />
   	</div>
 	<div class="input-group">
   	  <label>Name</label>
-  	  <input type="text" name="name">
+  	  <input type="text" name="name" required onkeypress="return /[a-z]/i.test(event.key)"/>
+  	</div>
+	
+		<div class="input-group">
+  	  <label>Department</label>
+	  <br></br>
+  	<select name="Department" required>	
+<option value="">--</option>
+<?php
+$conn = mysqli_connect("localhost", "root", "", "leadercompetency");
+$result=mysqli_query($conn,"SELECT * FROM Department");
+if ($result->num_rows > 0) {
+while($rowww = $result->fetch_assoc()) {?>
+<option value="<?php echo $rowww['Department'];?>"><?php echo $rowww['Department'];?></option>
+<?php				
+}
+}
+?>
+</select>
+	</div>
+	
+  	<div class="input-group">
+  	  <label>Password</label>
+  	  <input type="password" name="password_1" id="password" pattern=".{8,12}" title="8 - 12 Character include [!@#$%^&*][a-z][A-Z][0-9]" size=30 pattern="[!@#$%^&*][a-z][A-Z][0-9]" required />
+  	</div>
+  	<div class="input-group">
+  	  <label>Confirm password</label>
+  	  <input type="password" name="password_2" id="password" pattern=".{8,12}" title="8 - 12 Character include [!@#$%^&*][a-z][A-Z][0-9]" size=30 pattern="[!@#$%^&*][a-z][A-Z][0-9]" required />
   	</div>
 	<div class="input-group">
   	  <label>Email</label>
-  	  <input type="email" name="email">
+  	  <input type="email" name="email" required />
   	</div>
 	<div class="input-group">
   	
   	<div class="input-group">
-  	  <button type="submit" class="btn" name="reg_user">Register</button>  
+  	  <button type="submit" class="btn" onClick="validatePasswords()" name="reg_user">Register</button>  
   	</div>
   </form>
+<script>
+function validatePasswords(){
+    
+   var InputValue = $("#password").val();
+  var regex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+    $("#passwordText").text(`Password value:- ${InputValue}`);
+    
+    if(!regex.test(InputValue)) {
+         $("#error").text("Invalid Password");
+    }
+    else{
+          $("#error").text("");
+    }
+}
+</script>  
 </body>
 </html>

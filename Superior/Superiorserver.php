@@ -17,6 +17,7 @@ if (isset($_POST['reg_user'])) {
   $password_2 = mysqli_real_escape_string($db, $_POST['password_2']);
   $name = mysqli_real_escape_string($db, $_POST['name']);
   $email = mysqli_real_escape_string($db, $_POST['email']);
+  $Department = mysqli_real_escape_string($db, $_POST['Department']);
 
 
   // form validation: ensure that the form is correctly filled ...
@@ -24,6 +25,7 @@ if (isset($_POST['reg_user'])) {
   if (empty($username)) { array_push($errors, "Username is required"); }
   if (empty($name)) { array_push($errors, "Name is required"); }
   if (empty($email)) { array_push($errors, "Email is required"); }
+  if (empty($Department)) { array_push($errors, "Department is required"); }
   if (empty($password_1)) { array_push($errors, "Password is required"); }
   if ($password_1 != $password_2) {
 	array_push($errors, "The two passwords do not match");
@@ -45,14 +47,17 @@ if (isset($_POST['reg_user'])) {
   if (count($errors) == 0) {
   	$password = ($password_1);//encrypt the password before saving in the database
 
-  	$query = "INSERT INTO account (EmployeeID, Name,  Email) 
-  			  VALUES('$username', '$name', '$email')";
+  	$query = "INSERT INTO account (EmployeeID, Name,  Email, Department) 
+  			  VALUES('$username', '$name', '$email', '$Department')";
   	mysqli_query($db, $query);
 	$query = "INSERT INTO login (Username, Password,  Roles, Status) 
   			  VALUES('$username', '$password', 'Superior','Unactivate')";
   	mysqli_query($db, $query);
-  	$_SESSION['username'] = $username;
-  	$_SESSION['success'] = "You are now logged in";
+	$query = "INSERT INTO background (EmployeeID) 
+  			  VALUES('$username')";
+  	mysqli_query($db, $query);
+  //	$_SESSION['username'] = $username;
+  	//$_SESSION['success'] = "You are now logged in";
   	echo '<script type="text/javascript"> 
     alert("Please Waiting for Admin Activate Your Account"); 
 	window.location.href = "Superiorlogin.php";
@@ -84,5 +89,7 @@ if (isset($_POST['login_user'])) {
   	}
   }
 }
+
+
 
 ?>

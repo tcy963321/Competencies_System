@@ -41,7 +41,7 @@ $department= mysqli_real_escape_string($db, $_POST['department']);
   
   if ($user) { // if user exists
     if ($user['username'] === $username) {
-      array_push($errors, "Username already exists");
+      array_push($errors, "Employee ID already exists");
     }
   }
 
@@ -53,7 +53,10 @@ $department= mysqli_real_escape_string($db, $_POST['department']);
   			  VALUES('$username', '$name', '$email' ,'$department')";
   	mysqli_query($db, $query);
 	$query = "INSERT INTO login (Username, Password,  Roles, Status) 
-  			  VALUES('$username', '$password', 'Superior','Activate')";
+  			  VALUES('$username', '$password', 'User','Activate')";
+  	mysqli_query($db, $query);
+	$query = "INSERT INTO background (EmployeeID) 
+  			  VALUES('$username')";
   	mysqli_query($db, $query);
   	echo '<script type="text/javascript"> 
     alert("Added Account"); 
@@ -92,8 +95,8 @@ Competencies</div>
 		<nav>
 		<ul>
 			<li class="left"><a href="Welcomesuperior.php">Dashboard</a></li>
-			<li class="left"><a href="">Competency</a></li>
-			<li class="left"><a href="">Report</a></li>
+			<li class="left"><a href="SuperiorAssignASS.php">Competency</a></li>
+			<li class="left"><a href="Report.php">Report</a></li>
 			<li class="left"><a href="SuperiorRoles.php">Roles</a></li>
 			<li class="left"><a href="Logout.php">Logout</a></li>
 			<li class="right"><a href="Welcomesuperior.php">Hello <?php echo $_SESSION['username']; ?></a></li>
@@ -117,36 +120,48 @@ Competencies</div>
   	<?php include('errors.php'); ?>
   	<tr>
 	<td class="td_1">EmployeeID</td>
-  	   <td class="left"><input type="text" name="username" value="<?php echo $username; ?>"></td>
+  	   <td class="left"><input type="text" name="username" value="" required /></td>
 	</tr>
 	
 	<tr>
   	<td class="td_1">Password</td>
-  	  <td class="left"><input type="password" name="password_1"></td>
+  	  <td class="left"><input type="password" name="password_1" id="password" pattern=".{8,12}" title="8 - 12 Character include [!@#$%^&*][a-z][A-Z][0-9]" size=30 pattern="[!@#$%^&*][a-z][A-Z][0-9]" required /></td>
 	</tr>
 	
 	<tr>
   	<td class="td_1">Confirm password</td>
-  	  <td class="left"><input type="password" name="password_2"></td>
+  	  <td class="left"><input type="password" name="password_2" id="password" pattern=".{8,12}" title="8 - 12 Character include [!@#$%^&*][a-z][A-Z][0-9]" size=30 pattern="[!@#$%^&*][a-z][A-Z][0-9]" required /></td>
 	</tr>
 	
 	<tr>
 	<td class="td_1">Name</td>
-  	  <td class="left"><input type="text" name="name"></td>
+  	  <td class="left"><input type="text" name="name" required /></td>
 	</tr>
 	
 	<tr>
 	<td class="td_1">Email</td>
-  	  <td class="left"><input type="email" name="email"></td>
+  	  <td class="left"><input type="email" name="email" required /></td>
 	</tr>
 	
 	<tr>
 	<td class="td_1">Department</td>
-  	  <td class="left"><input type="text" name="department"></td>
+  	  <td class="left">  	<select name="department" required>	
+<option value="">--</option>
+<?php
+$conn = mysqli_connect("localhost", "root", "", "leadercompetency");
+$result=mysqli_query($conn,"SELECT * FROM Department");
+if ($result->num_rows > 0) {
+while($rowww = $result->fetch_assoc()) {?>
+<option value="<?php echo $rowww['Department'];?>"><?php echo $rowww['Department'];?></option>
+<?php				
+}
+}
+?>
+</select></td>
 	</tr>
   	
   	<tr>
-  	  <td class="left"><button type="submit" class="btn" name="reg_user">Register</button></td>  
+  	  <td class="left"><button type="submit" class="btn" onClick="validatePasswords()" name="reg_user">Register</button></td>  
 	</tr>
 	</form>
 	</table>
@@ -159,5 +174,22 @@ Competencies</div>
 </footer>
 </div>
 </div>
+
+<script>
+function validatePasswords(){
+    
+   var InputValue = $("#password").val();
+  var regex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+    $("#passwordText").text(`Password value:- ${InputValue}`);
+    
+    if(!regex.test(InputValue)) {
+         $("#error").text("Invalid Password");
+    }
+    else{
+          $("#error").text("");
+    }
+}
+</script>
+
 </body>
 </html>

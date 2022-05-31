@@ -14,7 +14,7 @@ if (count($_POST) > 0) {
         mysqli_query($conn, "UPDATE login set Password='" . $_POST["newPassword"] . "' WHERE username='$ID'");
         echo '<script type="text/javascript"> 
     alert("Password Changed"); 
-	window.location.href = "Adminlogin.php";
+	window.location.href = "../Adminlogin.php";
 </script>';
     } else
         echo '<script type="text/javascript"> 
@@ -30,6 +30,7 @@ if (count($_POST) > 0) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="welcomeSuper.css"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="asset/js/jquery.2.1.3.min.js" type="text/javascript"> </script>
 <script src="script.js" type="text/javascript"> </script>
 </head>
@@ -53,7 +54,7 @@ Competencies</div>
 		<ul>
 			<li class="left"><a href="Welcomesuperadmin.php">Dashboard</a></li>
 			<li class="left"><a href="SuperCreateCompetency.php">Competency</a></li>
-			<li class="left"><a href="">Report</a></li>
+			<li class="left"><a href="Report.php">Report</a></li>
 			<li class="left"><a href="SuperadminRoles.php">Roles</a></li>
 			<li class="left"><a href="Logout.php">Logout</a></li>
 			<li class="right"><a href="Welcomesuperadmin.php">Hello <?php echo $_SESSION['username']; ?></a></li>
@@ -64,7 +65,8 @@ Competencies</div>
 		<div class="left wt_25 side_1">
 
 			<div class="menu_list">
-				<li><a href="EditSuperadminProfile.php">Profile</a></li>	
+				<li><a href="EditSuperadminProfile.php">Profile</a></li>
+				<li><a href="Educational.php">Educational Background</a></li>
 				<li><a href="SuperadminChangePassword.php">Change Password</a></li>
 				<li><a href="SuperadminChangeImage.php">Edit Image</a></li>						
 			</div>
@@ -86,19 +88,19 @@ Competencies</div>
                 <tr>
                     <td class="td_1">New Password</td>
                     <td class="left"><input type="password" name="newPassword"
-                        class="txtField" id="password2"/><span 
+                        class="txtField" id="password2" pattern=".{8,12}" title="8 - 12 Character include [!@#$%^&*][a-z][A-Z][0-9]" size=30 pattern="[!@#$%^&*][a-z][A-Z][0-9]" /><span 
 						id="newPassword" class="required"></span><i class="far fa-eye" id="togglePassword2"></i></td>
                 </tr>
 				
 				<tr>
                 <td class="td_1">Confirm Password</td>
                 <td class="left"><input type="password" name="confirmPassword"
-                    class="txtField" id="password3"/><span 
+                    class="txtField" id="password3" pattern=".{8,12}" title="8 - 12 Character include [!@#$%^&*][a-z][A-Z][0-9]" size=30 pattern="[!@#$%^&*][a-z][A-Z][0-9]"/><span 
 					id="confirmPassword" class="required"></span><i class="far fa-eye" id="togglePassword3"></i></td>
                 </tr>
                 
 				<tr>
-				<td class="left"><input type="submit" name="submit" value="Update" class="btnSubmit"/></td>
+				<td class="left"><input type="submit" name="submit" value="Update" onClick="validatePasswords()" class="btnSubmit"/></td>
 				</tr>
     </form>
 	</table>
@@ -115,6 +117,25 @@ Competencies</div>
 </body>
 </html>
 <script>
+function validatePasswords() {
+    var p = document.getElementById('password2').value,
+        errors = [];
+    if (p.length < 8) {
+        errors.push("Your password must be at least 8 characters"); 
+    }
+    if (p.search(/[a-z]/i) < 0) {
+        errors.push("Your password must contain at least one letter.");
+    }
+    if (p.search(/[0-9]/) < 0) {
+        errors.push("Your password must contain at least one digit."); 
+    }
+    if (errors.length > 0) {
+        alert(errors.join("\n"));
+        return false;
+    }
+    return true;
+}
+
 function validatePassword() {
 var currentPassword,newPassword,confirmPassword,output = true;
 
@@ -161,7 +182,7 @@ const togglePassword2 = document.querySelector('#togglePassword2');
 const password2 = document.querySelector('#password2'); 
 togglePassword2.addEventListener('click', function (e) {
     // toggle the type attribute
-    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    const type = password2.getAttribute('type') === 'password' ? 'text' : 'password';
     password2.setAttribute('type', type);
     // toggle the eye slash icon
     this.classList.toggle('fa-eye-slash');

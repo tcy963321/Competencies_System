@@ -52,8 +52,8 @@ Competencies</div>
 		<nav>
 		<ul>
 			<li class="left"><a href="Welcomeuser.php">Home</a></li>
-			<li class="left"><a href="">Competency</a></li>
-			<li class="left"><a href="">Report</a></li>
+			<li class="left"><a href="UserCompetency.php">Competency</a></li>
+			<li class="left"><a href="Report.php">Report</a></li>
 			<li class="left"><a href="Logout.php">Logout</a></li>
 			<li class="right"><a href="Welcomeuser.php">Hello <?php echo $_SESSION['username']; ?></a></li>
 		<ul>
@@ -61,16 +61,15 @@ Competencies</div>
 	</div>
 	<div class="tp-contentwrap1">
 		<div class="left wt_25 side_1">
-
 			<div class="menu_list">
 				<li><a href="EditUserProfile.php">Edit Profile</a></li>	
+				<li><a href="Educational.php">Educational Background</a></li>
 				<li><a href="UserChangePassword.php">Edit Password</a></li>	
 				<li><a href="UserChangeImage.php">Edit Image</a></li>					
 			</div>
 		</div>
 		
 <div class="right wt_75">	
-	
   	<div class="tp-contentwrap2">
 			<div class="strip-profile">Secure Password</div>
     <form name="frmChange" method="post" action="" onSubmit="return validatePassword()">
@@ -78,33 +77,33 @@ Competencies</div>
                 <tr>
                     <td class="td_1">Current Password</td>
                     <td class="left"><input type="password"
-                        name="currentPassword" class="txtField" id="password"/><span
+                        name="currentPassword" class="txtField" required id="password"/><span
                         id="currentPassword" class="required"></span><i class="far fa-eye" id="togglePassword"></i></td>
                 </tr>
 				
                 <tr>
                     <td class="td_1">New Password</td>
-                    <td class="left"><input type="password" name="newPassword"
-                        class="txtField" id="password2"/><span 
-						id="newPassword" class="required"></span><i class="far fa-eye" id="togglePassword2"></i></td>
+                <td class="left"><input type="password" name="newPassword"
+                    class="txtField" required id="password2" pattern=".{8,12}" title="8 - 12 Character include [!@#$%^&*][a-z][A-Z][0-9]" size=30 pattern="[!@#$%^&*][a-z][A-Z][0-9]" /><span 
+					id="newPassword" class="required"></span><i class="far fa-eye" id="togglePassword2"></i></td>
                 </tr>
 				
 				<tr>
                 <td class="td_1">Confirm Password</td>
                 <td class="left"><input type="password" name="confirmPassword"
-                    class="txtField" id="password3"/><span 
+                    class="txtField" required id="password3" pattern=".{8,12}" title="8 - 12 Character include [!@#$%^&*][a-z][A-Z][0-9]" size=30 pattern="[!@#$%^&*][a-z][A-Z][0-9]" /><span 
 					id="confirmPassword" class="required"></span><i class="far fa-eye" id="togglePassword3"></i></td>
                 </tr>
                 
 				<tr>
-				<td class="left"><input type="submit" name="submit" value="Update" class="btnSubmit"/></td>
+				<td class="left"><input type="submit" name="submit" value="Update" onClick="validatePasswords()" class="btnSubmit"/></td>
 				</tr>
     </form>
 	</table>
-				</div>
-			</div>
-		</div>		
-</div>
+	</div>
+	</div>
+	</div>		
+	</div>
   	</div>
 	<footer>
 	<div class="">&copy; Copyright S52287 2021.</div>
@@ -114,6 +113,21 @@ Competencies</div>
 </body>
 </html>
 <script>
+
+function validatePasswords(){
+    
+   var InputValue = $("#password2").val();
+  var regex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+    $("#passwordText").text(`Password value:- ${InputValue}`);
+    
+    if(!regex.test(InputValue)) {
+         $("#error").text("Invalid Password");
+    }
+    else{
+          $("#error").text("");
+    }
+}
+
 function validatePassword() {
 var currentPassword,newPassword,confirmPassword,output = true;
 
@@ -160,7 +174,7 @@ const togglePassword2 = document.querySelector('#togglePassword2');
 const password2 = document.querySelector('#password2'); 
 togglePassword2.addEventListener('click', function (e) {
     // toggle the type attribute
-    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    const type = password2.getAttribute('type') === 'password' ? 'text' : 'password';
     password2.setAttribute('type', type);
     // toggle the eye slash icon
     this.classList.toggle('fa-eye-slash');

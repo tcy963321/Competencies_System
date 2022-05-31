@@ -28,7 +28,7 @@
    <div class="dropdown">
    <button class="w3-bar-item w3-button">Leadership Competency Test</button>
    <div class="dropdown-content">
-    <a href="">Assessment</a>
+    <a href="AssignASS.php">Assessment</a>
     <a href="">Evaluate</a>
 	</div>
 	</div>
@@ -45,38 +45,31 @@ Competencies</div>
 </div>
 <div class="w3-content"style="max-width:90%;margin-top:80px;margin-bottom:80px">
 <div class="w3-container">
+<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Question / Competency Code...">
    <center><table id="competency" class="w3-responsive">
   <tr>
                         <th>ID</th>
                         <th>Question</th>
                         <th>Question Code</th>
-                        <th>Option 1</th>
-                        <th>Option 2</th>
-						<th>Option 3</th>
-						<th>Option 4</th>
-						<th>Option 5</th>
 						<th>Code Competency</th>
 						<th>Competency</th>
 						<th>Group Competency</th>
+						<th>Status</th>
 						<th>Action</th>
    </tr>
           <?php
-                      $result = getEvaluate();
+                      $result = getAssessment();
                       if($result){
                            while ($row = mysqli_fetch_assoc($result)){ ?>
 
                         <tr>
                             <td><?php echo $row['ID']; ?></td>
-                            <td><?php echo $row['EQuestion']; ?></td>
-                            <td><?php echo $row['E_QCode']; ?></td>
-                            <td><?php echo $row['Option1']; ?></td>
-							<td><?php echo $row['Option2']; ?></td>
-                            <td><?php echo $row['Option3']; ?></td>
-                            <td><?php echo $row['Option4']; ?></td>
-                            <td><?php echo $row['Option5']; ?></td>
+                            <td><?php echo $row['AQuestion']; ?></td>
+                            <td><?php echo $row['A_QCode']; ?></td>
 							<td><?php echo $row['CodeCompetency']; ?></td>
                             <td><?php echo $row['Competency']; ?></td>
                             <td><?php echo $row['GroupCompetency']; ?></td>
+							<td><?php echo $row['Status']; ?></td>
 							<td><?php echo "<form action='CompetencyEditEva.php?id=$row[ID]' method='POST'><button type='submit' name='Edit' title='Edit'><i class='fas fa-edit btnedit'></i></button></form><form class='delete_button' action='processcompetency.php?id=$row[ID]' method='POST'><button type='submit' title='Delete' name='DeleteEva'><i class='fas fa-trash-alt'></i></button></form>";?></td>
                        </tr>
                    <?php
@@ -101,6 +94,26 @@ function w3_close() {
   document.getElementById("main").style.marginLeft = "0%";
   document.getElementById("mySidebar").style.display = "none";
   document.getElementById("openNav").style.display = "inline-block";
+}
+
+function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("competency");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[2];
+	td = tr[i].getElementsByTagName("td")[8];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
 }
 </script>
 </body>

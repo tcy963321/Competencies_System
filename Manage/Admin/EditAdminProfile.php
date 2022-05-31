@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="welcomeSuperior.css"/>
 <script src="asset/js/jquery.2.1.3.min.js" type="text/javascript"> </script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="script.js" type="text/javascript"> </script>
 </head>
 <body>
@@ -18,7 +21,9 @@
 				$db = mysqli_connect('localhost', 'root', '', 'leadercompetency');
 				$ID= $_SESSION["username"];
 				$sql=mysqli_query($db,"SELECT * FROM account where EmployeeID='$ID' ");
-				$row  = mysqli_fetch_array($sql);	
+				$row  = mysqli_fetch_array($sql);
+				$sqlsss=mysqli_query($db,"SELECT Department FROM account where EmployeeID='$ID'");
+				$rowsss=mysqli_fetch_array($sqlsss);
 
 if(isset($_POST['submit']))
 {
@@ -77,8 +82,8 @@ Competencies</div>
 		<nav>
 		<ul>
 			<li class="left"><a href="Welcomeadmin.php">Dashboard</a></li>
-			<li class="left"><a href="">Competency</a></li>
-			<li class="left"><a href="">Report</a></li>
+			<li class="left"><a href="AdminCreateCompetency.php">Competency</a></li>
+			<li class="left"><a href="Report.php">Report</a></li>
 			<li class="left"><a href="AdminRoles.php">Roles</a></li>
 			<li class="left"><a href="Logout.php">Logout</a></li>
 			<li class="right"><a href="Welcomeadmin.php">Hello <?php echo $_SESSION['username']; ?></a></li>
@@ -91,6 +96,7 @@ Competencies</div>
 
 			<div class="menu_list">
 			<li><a href="EditAdminProfile.php">Edit Profile</a></li>	
+			<li><a href="Educational.php">Educational Background</a></li>
 			<li><a href="AdminChangePassword.php">Edit Password</a></li>
 			<li><a href="AdminChangeImage.php">Edit Image</a></li>		
 			</div>
@@ -111,51 +117,66 @@ Competencies</div>
 			<table>
 			    <tr>
 				<td class="td_1">Name :</td>
-				<td  class="left"><input type="text" name="name" value="<?php  echo  $row['Name'];  ?>" placeholder="Name"/></td>
+				<td  class="left"><input type="text" name="name" value="<?php  echo  $row['Name'];  ?>" placeholder="Name" required onkeypress="return /[a-z]/i.test(event.key)" maxlength="50" size="50"/></td>
 			    </tr>
 				
 				<tr>
 				<td class="td_1">Identity Card/ PassportNumber :</td>
-				<td  class="left"><input type="text" name="ic" value="<?php  echo  $row['IC'];  ?>" placeholder="IC"/></td>
+				<td  class="left"><input type="text" name="ic" value="<?php  echo  $row['IC'];  ?>" placeholder="IC" required maxlength="12" size="12"/></td>
 				</tr>
 			  
 				<tr>
 				<td class="td_1">Contact Number :</td>
-				<td class="left"><input type="text" name="contact_number" value="<?php  echo  $row['Contact_Number'];  ?>" placeholder="Contact number"/></td>
+				<td class="left"><input type="text" name="contact_number" value="<?php  echo  $row['Contact_Number'];?>" placeholder="Contact number" required  maxlength="11" size="11" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" /></td>
 				</tr>
 			
 				<tr>
 				<td class="td_1">Gender :</td>		
-				<td  class="left"><?php $sad=$row['Gender']; if($sad=="male"){$rs="selected";}else{$rs="";}if($sad=="female"){$acer="selected";}else{$acer="";}  ?>
+				<td class="left"><?php $sad=$row['Gender']; if($sad=="male"){$rs="selected";}else{$rs="";}if($sad=="female"){$acer="selected";}else{$acer="";}  ?>
 				<select name="gender">
-					<option value="male" <?php echo $rs;?> >Male</option>
-					<option value="female" <?php echo $acer;?> >Female</option>
+				<option value="male" <?php echo $rs;?> >Male</option>
+				<option value="female" <?php echo $acer;?> >Female</option>
 				</select></td>	
 				</tr>
 				
 				<tr>
 				<td class="td_1">Date Of Birth :</td>
-				<td  class="left"><input type="Date" name="dob" value="<?php  echo  $row['Date_of_Birth'];  ?>" placeholder="dd/mm/yyyy"/></td>
+				<td class="left"><input type="text" id="txtfuturedate" class="datepicker" name="dob" value="<?php  echo  $row['Date_of_Birth'];  ?>" placeholder="dd/mm/yyyy" required /></td>
 				</tr>
 			
 				<tr>
 				<td class="td_1">Address :</td>
-				<td  class="left"><textarea name="address" placeholder="Address"  rows="2" cols="25"><?php  echo  $row['Address'];?></textarea></td>
+				<td  class="left"><textarea name="address" placeholder="Address"  rows="2" cols="25" required ><?php  echo  $row['Address'];?></textarea></td>
 				</tr>
 				<tr>
 				
 				<td class="td_1">Email :</td>
-				<td  class="left"><input type="text" name="email" value="<?php  echo  $row['Email'];  ?>" placeholder="Email"/></td>
+				<td  class="left"><input type="email" name="email" value="<?php  echo  $row['Email'];  ?>" placeholder="Email" required /></td>
 				</tr>
-				<tr>
 				
+				<tr>
 				<td class="td_1">Department :</td>
-				<td  class="left"><input type="text" name="department" value="<?php  echo  $row['Department'];  ?>" placeholder="Department"/></td>
+				<td  class="left">
+				<select name="department">	
+<option value="<?php echo $rowsss['Department'];?>"><?php echo $rowsss['Department'];?></option>
+<option>--</option>
+
+<?php
+$conn = mysqli_connect("localhost", "root", "", "leadercompetency");
+$result=mysqli_query($conn,"SELECT * FROM department");
+if ($result->num_rows > 0) {
+while($rowww = $result->fetch_assoc()) {?>
+<option value="<?php echo $rowww['Department'];?>"><?php echo $rowww['Department'];?></option>
+<?php				
+}
+}
+?>
+</select></td>
 				</tr>
 			
 				<tr>
 				<td class="td_1">Position :</td>
-				<td  class="left"><input type="text" name="position" value="<?php  echo  $row['Position'];  ?>" placeholder="Position"/></td>
+				<td  class="left"><input type="text" name="position" value="<?php  echo  $row['Position'];  ?>" placeholder="Position" required onkeypress="return /[a-z]/i.test(event.key)" maxlength="50" size="50" /></td>
 				</tr>
 			
 				<tr>
@@ -173,7 +194,12 @@ Competencies</div>
 	<div class="">&copy; Copyright S52287 2021.</div>
 </footer>
 </div>
-</div>  
+</div> 
+<script>
+$("#txtfuturedate").datepicker({
+    maxDate: 0
+});
+</script> 
 </body>
 </html>
 
